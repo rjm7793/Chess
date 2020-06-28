@@ -8,7 +8,7 @@ public class ChessGame {
         board = new ChessBoard();
     }
 
-    public static void main() {
-
+    public static void main(String[] args) {
+        ChessGame c = new ChessGame();
     }
 }
