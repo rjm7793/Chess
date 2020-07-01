@@ -11,6 +11,11 @@ import java.util.ArrayList;
  */
 public abstract class ChessPiece {
 
+    public enum PieceColor {
+        WHITE,
+        BLACK
+    }
+
     /**
      * The board that this piece belongs to
      */
@@ -24,12 +29,15 @@ public abstract class ChessPiece {
 
     protected String name;
 
+    protected PieceColor color;
+
     protected int row;
     protected int col;
 
-    public ChessPiece(ChessBoard board, Square square) {
+    public ChessPiece(ChessBoard board, Square square, PieceColor color) {
         this.board = board;
         this.currentSquare = square;
+        this.color = color;
         row = square.getRow();
         col = square.getCol();
     }

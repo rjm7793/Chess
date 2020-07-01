@@ -5,8 +5,8 @@ import chess_game.Square;
 
 public class Rook extends ChessPiece {
 
-    public Rook(ChessBoard board, Square square) {
-        super(board, square);
+    public Rook(ChessBoard board, Square square, PieceColor color) {
+        super(board, square, color);
         name = "R";
     }
 

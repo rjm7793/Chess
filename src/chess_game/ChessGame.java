@@ -9,6 +9,6 @@ public class ChessGame {
     }
 
     public static void main(String[] args) {
-        ChessGame c = new ChessGame();
+
     }
 }

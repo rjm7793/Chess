@@ -5,8 +5,8 @@ import chess_game.Square;
 
 public class Knight extends ChessPiece {
 
-    public Knight(ChessBoard board, Square square) {
-        super(board, square);
+    public Knight(ChessBoard board, Square square, PieceColor color) {
+        super(board, square, color);
         name = "k";
     }
 
