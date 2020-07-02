@@ -7,7 +7,6 @@ public class Knight extends ChessPiece {
 
     public Knight(ChessBoard board, Square square, PieceColor color) {
         super(board, square, color);
-        name = "k";
     }
 
     /**

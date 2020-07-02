@@ -32,7 +32,7 @@ public class Square {
 
     public void setCurrentPiece(ChessPiece newPiece) {
         occupied = true;
-        this.currentPiece = newPiece;
+        currentPiece = newPiece;
     }
 
     public void setOccupiedFalse() {
@@ -49,6 +49,6 @@ public class Square {
      */
     @Override
     public String toString() {
-        return String.valueOf(col + 97) + (-row + 8);
+        return String.valueOf((char)(col + 97)) + (-row + 8);
     }
 }

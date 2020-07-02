@@ -8,7 +8,6 @@ public class King extends ChessPiece {
 
     public King(ChessBoard board, Square square, PieceColor color) {
         super(board, square, color);
-        name = "K";
     }
 
     /**

@@ -1,8 +1,11 @@
 package chess_game;
 
+import gui.ChessGUI;
+import javafx.application.Application;
+
 public class ChessInit {
 
     public static void main(String[] args) {
-        ChessGame c = new ChessGame();
+        Application.launch(ChessGUI.class);
     }
 }

@@ -27,7 +27,7 @@ public abstract class ChessPiece {
 
     protected ArrayList<ChessPiece> allPiecesAttacked;
 
-    protected String name;
+
 
     protected PieceColor color;
 
@@ -52,8 +52,4 @@ public abstract class ChessPiece {
 
     public abstract void findAllMoves();
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }

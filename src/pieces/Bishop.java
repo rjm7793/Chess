@@ -7,7 +7,6 @@ public class Bishop extends ChessPiece {
 
     public Bishop(ChessBoard board, Square square, PieceColor color) {
         super(board, square, color);
-        name = "B";
     }
 
     /**

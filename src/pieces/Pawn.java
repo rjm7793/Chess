@@ -7,7 +7,6 @@ public class Pawn extends ChessPiece {
 
     public Pawn(ChessBoard board, Square square, PieceColor color) {
         super(board, square, color);
-        name = "p";
     }
 
     /**
