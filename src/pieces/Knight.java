@@ -24,9 +24,4 @@ public class Knight extends ChessPiece {
     public void findAllMoves() {
 
     }
-
-    @Override
-    public String toString() {
-        return null;
-    }
 }

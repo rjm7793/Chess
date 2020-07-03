@@ -46,7 +46,7 @@ public class ChessGUI extends Application {
     /**
      * A 2d array of Buttons that represent the squares on the chess board
      */
-    private Button[][] squares;
+    private Button[][] buttonGrid;
 
     /**
      * The scene to be contained within the Stage
@@ -61,7 +61,7 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage stage) {
-        squares = new Button[8][8];
+        buttonGrid = new Button[8][8];
         gridPane = new GridPane();
 
         vBox = new VBox();
@@ -81,5 +81,11 @@ public class ChessGUI extends Application {
         borderPane = new BorderPane();
     }
 
+    /**
+     * Populates the gridPane with
+     */
+    public void populateGridPane() {
+
+    }
 
 }

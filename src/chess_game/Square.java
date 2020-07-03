@@ -4,6 +4,11 @@ import pieces.ChessPiece;
 
 public class Square {
 
+    public enum SquareType {
+        LIGHT,
+        DARK
+    }
+
     private boolean occupied;
 
     private ChessPiece currentPiece;
@@ -11,11 +16,14 @@ public class Square {
     private final int row;
     private final int col;
 
-    public Square(int row, int col) {
+    private SquareType squareType;
+
+    public Square(int row, int col, SquareType type) {
         occupied = false;
         currentPiece = null;
         this.row = row;
         this.col = col;
+        squareType = type;
     }
 
     public ChessPiece getCurrentPiece() {
