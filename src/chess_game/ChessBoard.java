@@ -17,7 +17,7 @@ public class ChessBoard {
                     case 0:
                         if (col % 2 == 0) {
                             squares[row][col] = new Square(row, col, Square.SquareType.LIGHT);
-                        } else {
+                        } else { 
                             squares[row][col] = new Square(row, col, Square.SquareType.DARK);
                         }
                         break;
@@ -89,6 +89,10 @@ public class ChessBoard {
             squares[1][col].setCurrentPiece(new Pawn(this, squares[1][col], ChessPiece.PieceColor.BLACK));
             squares[6][col].setCurrentPiece(new Pawn(this, squares[1][col], ChessPiece.PieceColor.WHITE));
         }
+    }
+
+    public Square[][] getSquares() {
+        return squares;
     }
 
     public void displayBoard() {

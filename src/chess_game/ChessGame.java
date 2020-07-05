@@ -12,6 +12,10 @@ public class ChessGame {
         board = new ChessBoard();
     }
 
+    public ChessBoard getBoard() {
+        return board;
+    }
+
     public void setObserver(ChessGUI observer) {
         this.observer = observer;
     }

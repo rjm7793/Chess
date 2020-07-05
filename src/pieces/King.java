@@ -26,4 +26,12 @@ public class King extends ChessPiece {
 
     }
 
+    @Override
+    public String toString() {
+        if (color == PieceColor.WHITE) {
+            return "whiteking";
+        } else {
+            return "blackking";
+        }
+    }
 }

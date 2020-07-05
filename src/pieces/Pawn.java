@@ -24,4 +24,13 @@ public class Pawn extends ChessPiece {
     public void findAllMoves() {
 
     }
+
+    @Override
+    public String toString() {
+        if (color == PieceColor.WHITE) {
+            return "whitepawn";
+        } else {
+            return "blackpawn";
+        }
+    }
 }

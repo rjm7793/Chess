@@ -27,8 +27,6 @@ public abstract class ChessPiece {
 
     protected ArrayList<ChessPiece> allPiecesAttacked;
 
-
-
     protected PieceColor color;
 
     protected int row;

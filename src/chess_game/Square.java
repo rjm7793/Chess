@@ -26,6 +26,14 @@ public class Square {
         squareType = type;
     }
 
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public SquareType getSquareType() {
+        return squareType;
+    }
+
     public ChessPiece getCurrentPiece() {
         return currentPiece;
     }

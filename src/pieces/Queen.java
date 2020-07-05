@@ -25,4 +25,12 @@ public class Queen extends ChessPiece {
 
     }
 
+    @Override
+    public String toString() {
+        if (color == PieceColor.WHITE) {
+            return "whitequeen";
+        } else {
+            return "blackqueen";
+        }
+    }
 }

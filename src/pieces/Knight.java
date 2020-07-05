@@ -24,4 +24,13 @@ public class Knight extends ChessPiece {
     public void findAllMoves() {
 
     }
+
+    @Override
+    public String toString() {
+        if (color == PieceColor.WHITE) {
+            return "whiteknight";
+        } else {
+            return "blackknight";
+        }
+    }
 }

@@ -24,4 +24,13 @@ public class Bishop extends ChessPiece {
     public void findAllMoves() {
 
     }
+
+    @Override
+    public String toString() {
+        if (color == PieceColor.WHITE) {
+            return "whitebishop";
+        } else {
+            return "blackbishop";
+        }
+    }
 }

@@ -25,4 +25,12 @@ public class Rook extends ChessPiece {
 
     }
 
+    @Override
+    public String toString() {
+        if (color == PieceColor.WHITE) {
+            return "whiterook";
+        } else {
+            return "blackrook";
+        }
+    }
 }
