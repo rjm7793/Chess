@@ -2,10 +2,22 @@ package chess_game;
 
 import pieces.*;
 
+/**
+ * ChessBoard represents the chess board by using a 2d array of Squares that contain information
+ * about each Chess Piece on the board.
+ * @author Riley Muessig
+ */
 public class ChessBoard {
 
+    /**
+     * the 2d array of Squares
+     */
     private Square[][] squares;
 
+    /**
+     * Initializes the 2d array of squares and sets up the board with each piece in its
+     * proper position.
+     */
     public ChessBoard() {
         squares = new Square[8][8];
         for (int row = 0; row < 8; row++) {
@@ -13,7 +25,7 @@ public class ChessBoard {
                 // Fills the board with new Squares in such a way that follows the standard
                 // chess board pattern of alternating light and dark squares.
                 switch (row % 2) {
-                    // Creates new squares following the correct square color pattern for even rows
+                    // Creates new squares following the correct checkerboard color pattern for even rows
                     case 0:
                         if (col % 2 == 0) {
                             squares[row][col] = new Square(row, col, Square.SquareType.LIGHT);
@@ -22,7 +34,7 @@ public class ChessBoard {
                         }
                         break;
 
-                    // Creates new squares following the correct square color pattern for odd rows
+                    // Creates new squares following the correct checkerboard color pattern for odd rows
                     case 1:
                         if (col % 2 == 0) {
                             squares[row][col] = new Square(row, col, Square.SquareType.DARK);
@@ -38,9 +50,9 @@ public class ChessBoard {
                     case 0:
                     case 7:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], ChessPiece.PieceColor.BLACK));
+                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], Color.BLACK));
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], ChessPiece.PieceColor.WHITE));
+                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], Color.WHITE));
                         }
                         break;
 
@@ -48,9 +60,9 @@ public class ChessBoard {
                     case 1:
                     case 6:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], ChessPiece.PieceColor.BLACK));
+                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], Color.BLACK));
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], ChessPiece.PieceColor.WHITE));
+                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], Color.WHITE));
                         }
                         break;
 
@@ -58,27 +70,27 @@ public class ChessBoard {
                     case 2:
                     case 5:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], ChessPiece.PieceColor.BLACK));
+                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], Color.BLACK));
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], ChessPiece.PieceColor.WHITE));
+                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], Color.WHITE));
                         }
                         break;
 
                     // handles the placement of queens and their piece color
                     case 3:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], ChessPiece.PieceColor.BLACK));
+                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], Color.BLACK));
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], ChessPiece.PieceColor.WHITE));
+                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], Color.WHITE));
                         }
                         break;
 
                     // handles the placement of the kings and their piece color
                     case 4:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], ChessPiece.PieceColor.BLACK));
+                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], Color.BLACK));
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], ChessPiece.PieceColor.WHITE));
+                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], Color.WHITE));
                         }
                         break;
                 }
@@ -86,20 +98,16 @@ public class ChessBoard {
         }
         // sets up pawns for both sides
         for (int col = 0; col < 8; col++) {
-            squares[1][col].setCurrentPiece(new Pawn(this, squares[1][col], ChessPiece.PieceColor.BLACK));
-            squares[6][col].setCurrentPiece(new Pawn(this, squares[1][col], ChessPiece.PieceColor.WHITE));
+            squares[1][col].setCurrentPiece(new Pawn(this, squares[1][col], Color.BLACK));
+            squares[6][col].setCurrentPiece(new Pawn(this, squares[1][col], Color.WHITE));
         }
     }
 
+    /**
+     * Returns the 2d array of squares
+     * @return the 2d array of Squares
+     */
     public Square[][] getSquares() {
         return squares;
-    }
-
-    public void displayBoard() {
-
-    }
-
-    public void flipBoard() {
-
     }
 }

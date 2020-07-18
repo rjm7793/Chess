@@ -15,6 +15,10 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pieces.ChessPiece;
 
+/**
+ * The GUI for the Chess game. Acts as the View and Controller of the Model-View-Controller architecture.
+ * @author Riley Muessig
+ */
 public class ChessGUI extends Application {
 
     /**
@@ -57,12 +61,19 @@ public class ChessGUI extends Application {
      */
     private Scene scene;
 
+    /**
+     * Creates the model and makes this GUI known to the model.
+     */
     @Override
     public void init() {
         model = new ChessGame();
         model.setObserver(this);
     }
 
+    /**
+     * Initializes and configures the JavaFX Nodes in the GUI.
+     * @param stage the stage
+     */
     @Override
     public void start(Stage stage) {
         buttons = new Button[8][8];
@@ -105,8 +116,16 @@ public class ChessGUI extends Application {
         stage.setResizable(true);
         stage.setMaximized(true);
         stage.show();
+
+        model.gameLoop();
     }
 
+    /**
+     * Setup for a singular button when it's corresponding Square contains a chess
+     * piece and it requires a BackgroundImage to display it.
+     * @param button the button that is being altered
+     * @param square the corresponding square on the chess board
+     */
     public void setButtonBackgroundImage(Button button, Square square) {
         ChessPiece piece = square.getCurrentPiece();
         BackgroundFill backgroundFill;
@@ -132,7 +151,7 @@ public class ChessGUI extends Application {
     }
 
     /**
-     * Populates the gridPane with buttons
+     * Populates the gridPane with buttons and configures each button's background.
      */
     public void populateGridPane() {
         for (int row = 0; row < 8; row++) {
