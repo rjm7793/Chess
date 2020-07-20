@@ -7,6 +7,8 @@ package chess_game;
  */
 public class Player {
 
+    // TODO: Add a timer to Player class after finishing the game.
+
     /**
      * Color of the pieces this player can control
      */

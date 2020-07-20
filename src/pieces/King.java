@@ -4,11 +4,24 @@ import chess_game.ChessBoard;
 import chess_game.Color;
 import chess_game.Square;
 
+import java.util.ArrayList;
+
 /**
  * Subclass of ChessPiece. Representation of a King.
  * @author Riley Muessig
  */
 public class King extends ChessPiece {
+
+    /**
+     * True if this king is in check, false if not.
+     */
+    private boolean check;
+
+    /**
+     * Opposing pieces that are attacking this king. Used to determine valid moves
+     * in check situations.
+     */
+    private ArrayList<ChessPiece> beingAttackedBy;
 
     /**
      * Constructor for a King
@@ -18,6 +31,15 @@ public class King extends ChessPiece {
      */
     public King(ChessBoard board, Square square, Color color) {
         super(board, square, color);
+        check = false;
+    }
+
+    public void addAttacker(ChessPiece newAttacker) {
+        beingAttackedBy.add(newAttacker);
+    }
+
+    public void removeAttacker(ChessPiece removedAttacker) {
+        beingAttackedBy.remove(removedAttacker);
     }
 
     /**
@@ -28,8 +50,8 @@ public class King extends ChessPiece {
      * @param y y value of the proposed move
      * @return true if valid, false if invalid
      */
-    public boolean verifyMove(int x, int y) {
-        return false;
+    public void verifyMove(int x, int y) {
+
     }
 
     /**

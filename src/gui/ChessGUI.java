@@ -116,8 +116,6 @@ public class ChessGUI extends Application {
         stage.setResizable(true);
         stage.setMaximized(true);
         stage.show();
-
-        model.gameLoop();
     }
 
     /**

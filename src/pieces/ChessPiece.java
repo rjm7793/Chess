@@ -18,6 +18,8 @@ public abstract class ChessPiece {
      */
     protected ChessBoard board;
 
+    protected Square[][] squares;
+
     /**
      * The Square that this piece is currently on
      */
@@ -56,6 +58,9 @@ public abstract class ChessPiece {
         this.board = board;
         this.currentSquare = square;
         this.color = color;
+        validMoves = new ArrayList<>();
+        allPiecesAttacked = new ArrayList<>();
+        squares = board.getSquares();
         row = square.getRow();
         col = square.getCol();
     }
@@ -68,12 +73,20 @@ public abstract class ChessPiece {
      * @param y y value of the proposed move
      * @return true if valid, false if invalid
      */
-    public abstract boolean verifyMove(int x, int y);
+    public abstract void verifyMove(int x, int y);
 
     /**
      * Adds to the list of valid moves this piece can make by finding every valid move
      * this piece can make in the current turn.
      */
     public abstract void findAllMoves();
+
+    /**
+     * Returns color of this piece. Used to check if a piece can attack another.
+     * @return color of this piece
+     */
+    public Color getColor() {
+        return color;
+    }
 
 }

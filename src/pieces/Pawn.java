@@ -11,6 +11,12 @@ import chess_game.Square;
 public class Pawn extends ChessPiece {
 
     /**
+     * Boolean for if it is the pawn's first move. Used to check if this pawn
+     * can move two spaces instead of one.
+     */
+    private boolean firstMove;
+
+    /**
      * Constructor for a Pawn
      * @param board the board this piece belongs to
      * @param square the square this piece is on
@@ -18,6 +24,8 @@ public class Pawn extends ChessPiece {
      */
     public Pawn(ChessBoard board, Square square, Color color) {
         super(board, square, color);
+        firstMove = true;
+        findAllMoves();
     }
 
     /**
@@ -28,8 +36,49 @@ public class Pawn extends ChessPiece {
      * @param y y value of the proposed move
      * @return true if valid, false if invalid
      */
-    public boolean verifyMove(int x, int y) {
-        return false;
+    public void verifyMove(int x, int y) {
+        // must be within confines of the chess board
+        if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
+            // verifies moves where the pawn does not take any pieces
+            if (!squares[x][y].isOccupied()) {
+                if (y == col) {
+                    // Checks if the pawn is trying to move by two squares, then checks
+                    // if the square in between the starting point and destination is
+                    // occupied. Then checks if it is the pawn's first move, in which
+                    // case the move will be validated.
+                    if (x == row + 2 || x == row - 2) {
+                        if (color == Color.WHITE) {
+                            if (!squares[x + 1][y].isOccupied()) {
+                                if (firstMove) {
+                                    validMoves.add(squares[x][y]);
+                                }
+                            }
+                        }
+                        if (color == Color.BLACK) {
+                            if (!squares[x - 1][y].isOccupied()) {
+                                if (firstMove) {
+                                    validMoves.add(squares[x][y]);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        validMoves.add(squares[x][y]);
+                    }
+                }
+            }
+            // verifies moves where the pawn takes a piece by moving on a diagonal
+            else {
+                // Checks if the destination square is on a diagonal to this pawn.
+                if (y != col) {
+                    // Checks if the piece on the diagonal is of the opposing color before validating the move.
+                    if (color != squares[x][y].getCurrentPiece().getColor()) {
+                        validMoves.add(squares[x][y]);
+                        allPiecesAttacked.add(squares[x][y].getCurrentPiece());
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -38,7 +87,20 @@ public class Pawn extends ChessPiece {
      */
     @Override
     public void findAllMoves() {
-
+        // Finds all potential moves for white pawns
+        if (color == Color.WHITE) {
+            verifyMove(row - 1, col);
+            verifyMove(row - 1, col + 1);
+            verifyMove(row - 1, col - 1);
+            verifyMove(row - 2, col);
+        }
+        // Finds all potential moves for black pawns
+        else {
+            verifyMove(row + 1, col);
+            verifyMove(row + 1, col + 1);
+            verifyMove(row + 1, col - 1);
+            verifyMove(row + 2, col);
+        }
     }
 
     /**

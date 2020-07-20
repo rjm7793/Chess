@@ -59,9 +59,7 @@ public class ChessGame {
      * The main game loop that enforces turn order and when the game ends.
      */
     public void gameLoop() {
-        while (true) {
 
-        }
     }
 
     /**
