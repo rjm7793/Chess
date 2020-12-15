@@ -26,7 +26,6 @@ public class Knight extends ChessPiece {
      *
      * @param x x value of the proposed move
      * @param y y value of the proposed move
-     * @return true if valid, false if invalid
      */
     public void verifyMove(int x, int y) {
 

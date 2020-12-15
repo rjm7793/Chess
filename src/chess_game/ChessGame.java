@@ -49,9 +49,9 @@ public class ChessGame {
      * Constructor for ChessGame. Creates the board and players.
      */
     public ChessGame() {
-        board = new ChessBoard();
         player = new Player(Color.WHITE);
         player2 = new Player(Color.BLACK);
+        board = new ChessBoard(player, player2);
         gameState = GameState.WHITE_SELECT_PIECE;
     }
 
