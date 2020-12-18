@@ -42,6 +42,9 @@ public class King extends ChessPiece {
         beingAttackedBy.remove(removedAttacker);
     }
 
+    // TODO: For the check system and verifying moves, maybe iterate through all of the opposing
+    //  player's remaining pieces and find all their moves and see if any of them attack a space
+    //  this King wants to move to.
     /**
      * Checks if a move is in the list of valid moves for this piece, then returns
      * a boolean to signify if it is a valid move.
@@ -49,17 +52,24 @@ public class King extends ChessPiece {
      * @param x x value of the proposed move
      * @param y y value of the proposed move
      */
+    @Override
     public void verifyMove(int x, int y) {
-
+        super.verifyMove(x, y);
     }
 
     /**
      * Adds to the list of valid moves this piece can make by finding every valid move
      * this piece can make in the current turn.
      */
-    @Override
     public void findAllMoves() {
-
+        verifyMove(row + 1, col);
+        verifyMove(row + 1, col + 1);
+        verifyMove(row, col + 1);
+        verifyMove(row - 1, col + 1);
+        verifyMove(row - 1, col);
+        verifyMove(row - 1, col - 1);
+        verifyMove(row, col - 1);
+        verifyMove(row + 1, col - 1);
     }
 
     /**

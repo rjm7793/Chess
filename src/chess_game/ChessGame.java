@@ -1,6 +1,9 @@
 package chess_game;
 
 import gui.ChessGUI;
+import pieces.ChessPiece;
+
+import java.util.ArrayList;
 
 /**
  * ChessGame acts as the model in the Model-View-Controller architecture. Holds information about the
@@ -53,6 +56,12 @@ public class ChessGame {
         player2 = new Player(Color.BLACK);
         board = new ChessBoard(player, player2);
         gameState = GameState.WHITE_SELECT_PIECE;
+        ArrayList<ChessPiece> whitePieces = player.getPieces();
+        ArrayList<ChessPiece> blackPieces = player2.getPieces();
+        for (int i = 0; i < 16; i++) {
+            whitePieces.get(i).findAllMoves();
+            blackPieces.get(i).findAllMoves();
+        }
     }
 
     /**

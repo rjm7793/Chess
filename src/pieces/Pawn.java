@@ -34,6 +34,7 @@ public class Pawn extends ChessPiece {
      * @param x x value of the proposed move
      * @param y y value of the proposed move
      */
+    @Override
     public void verifyMove(int x, int y) {
         // must be within confines of the chess board
         if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
@@ -83,7 +84,6 @@ public class Pawn extends ChessPiece {
      * Adds to the list of valid moves this piece can make by finding every valid move
      * this piece can make in the current turn.
      */
-    @Override
     public void findAllMoves() {
         // Finds all potential moves for white pawns
         if (color == Color.WHITE) {

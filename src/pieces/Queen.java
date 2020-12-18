@@ -21,23 +21,12 @@ public class Queen extends ChessPiece {
     }
 
     /**
-     * Checks if a move is in the list of valid moves for this piece, then returns
-     * a boolean to signify if it is a valid move.
-     *
-     * @param x x value of the proposed move
-     * @param y y value of the proposed move
-     */
-    public void verifyMove(int x, int y) {
-
-    }
-
-    /**
      * Adds to the list of valid moves this piece can make by finding every valid move
      * this piece can make in the current turn.
      */
-    @Override
     public void findAllMoves() {
-
+        verifyDiagonals();
+        verifyStraights();
     }
 
     /**

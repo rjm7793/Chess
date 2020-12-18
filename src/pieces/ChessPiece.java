@@ -72,13 +72,103 @@ public abstract class ChessPiece {
      * @param x x value of the proposed move
      * @param y y value of the proposed move
      */
-    public abstract void verifyMove(int x, int y);
+    public void verifyMove(int x, int y) {
+        if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
+            if (!squares[x][y].isOccupied()) {
+                validMoves.add(squares[x][y]);
+            } else {
+                if (color == Color.WHITE) {
+                    if (squares[x][y].getCurrentPiece().getColor() == Color.BLACK) {
+                        validMoves.add(squares[x][y]);
+                    }
+                } else if (color == Color.BLACK) {
+                    if (squares[x][y].getCurrentPiece().getColor() == Color.WHITE) {
+                        validMoves.add(squares[x][y]);
+                    }
+                }
+            }
+        }
+    }
+
+    public void verifyDiagonals() {
+        verifyMove(row + 1, col + 1);
+        verifyMove(row + 1, col - 1);
+        verifyMove(row - 1, col + 1);
+        verifyMove(row - 1, col - 1);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 2; j < 8; j++) {
+                if (i == 0) {
+                    if ((row + j - 1) <= 7 && (col + j - 1) <= 7) {
+                        if (validMoves.contains(squares[row + j - 1][col + j - 1])) {
+                            verifyMove(row + j, col + j);
+                        }
+                    }
+                } else if (i == 1) {
+                    if ((row + j - 1) <= 7 && (col - j + 1) >= 0) {
+                        if (validMoves.contains(squares[row + j - 1][col - j + 1])) {
+                            verifyMove(row + j, col - j);
+                        }
+                    }
+                } else if (i == 2) {
+                    if ((row - j + 1) >= 0 && (col + j - 1) <= 7) {
+                        if (validMoves.contains(squares[row - j + 1][col + j - 1])) {
+                            verifyMove(row - j, col + j);
+                        }
+                    }
+                } else {
+                    if ((row - j + 1) >= 0 && (col - j + 1) >= 0) {
+                        if (validMoves.contains(squares[row - j + 1][col - j + 1])) {
+                            verifyMove(row - j, col - j);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    public void verifyStraights() {
+        verifyMove(row, col + 1);
+        verifyMove(row + 1, col);
+        verifyMove(row, col - 1);
+        verifyMove(row - 1, col);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 2; j < 8; j++) {
+                if (i == 0) {
+                    if ((col + j - 1) <= 7) {
+                        if (validMoves.contains(squares[row][col + j - 1])) {
+                            verifyMove(row, col + j);
+                        }
+                    }
+                } else if (i == 1) {
+                    if ((row + j - 1) <= 7) {
+                        if (validMoves.contains(squares[row + j - 1][col])) {
+                            verifyMove(row + j, col);
+                        }
+                    }
+                } else if (i == 2) {
+                    if ((col - j + 1) >= 0) {
+                        if (validMoves.contains(squares[row][col - j + 1])) {
+                            verifyMove(row, col - j);
+                        }
+                    }
+                } else {
+                    if ((row - j + 1) >= 0) {
+                        if (validMoves.contains(squares[row - j + 1][col])) {
+                            verifyMove(row - j, col);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Adds to the list of valid moves this piece can make by finding every valid move
      * this piece can make in the current turn.
      */
     public abstract void findAllMoves();
+
 
     /**
      * Returns color of this piece. Used to check if a piece can attack another.

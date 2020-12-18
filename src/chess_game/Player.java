@@ -23,6 +23,11 @@ public class Player {
     private ArrayList<ChessPiece> pieces;
 
     /**
+     * The number of pieces remaining for this player.
+     */
+    private int numPieces;
+
+    /**
      * Constructor for Player.
      * @param color color of this player's pieces
      */
@@ -33,9 +38,19 @@ public class Player {
 
     public void addPiece(ChessPiece piece) {
         pieces.add(piece);
+        numPieces++;
     }
 
     public void removePiece(ChessPiece piece) {
         pieces.remove(piece);
+        numPieces--;
+    }
+
+    public int getNumPieces() {
+        return numPieces;
+    }
+
+    public ArrayList<ChessPiece> getPieces() {
+        return pieces;
     }
 }
