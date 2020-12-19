@@ -71,6 +71,18 @@ public class ChessGame {
 
     }
 
+    public void update(int row, int col) {
+        if (gameState == GameState.WHITE_SELECT_PIECE) {
+
+        } else if (gameState == GameState.WHITE_SELECT_MOVE) {
+
+        } else if (gameState == GameState.BLACK_SELECT_PIECE) {
+
+        } else {
+
+        }
+    }
+
     /**
      * Returns the 2d array of Squares.
      * @return the board of Squares

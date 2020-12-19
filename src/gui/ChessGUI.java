@@ -81,6 +81,16 @@ public class ChessGUI extends Application {
         gridPane.setAlignment(Pos.CENTER);
         populateGridPane();
 
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                int finalRow = row;
+                int finalCol = col;
+                buttons[row][col].setOnAction(e -> {
+                    model.update(finalRow, finalCol);
+                });
+            }
+        }
+
         vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
         vBox.setTranslateX(630);
@@ -146,6 +156,16 @@ public class ChessGUI extends Application {
 
         Background background = new Background(fills, images);
         button.setBackground(background);
+    }
+
+    public void updateButton(Square square) {
+        int row = square.getRow();
+        int col = square.getCol();
+        setButtonBackgroundImage(buttons[row][col], square);
+    }
+
+    public void updateLabel(String message) {
+        this.message.setText(message);
     }
 
     /**
