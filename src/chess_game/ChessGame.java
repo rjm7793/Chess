@@ -48,6 +48,8 @@ public class ChessGame {
      */
     private Player player2;
 
+    private ChessPiece selectedPiece;
+
     /**
      * Constructor for ChessGame. Creates the board and players.
      */
@@ -64,23 +66,75 @@ public class ChessGame {
         }
     }
 
-    /**
-     * The main game loop that enforces turn order and when the game ends.
-     */
-    public void gameLoop() {
-
-    }
-
     public void update(int row, int col) {
         if (gameState == GameState.WHITE_SELECT_PIECE) {
+            if (!board.getSquares()[row][col].isOccupied()) {
+                observer.updateLabel(board.getSquares()[row][col].toString() + " is an empty square! Select" +
+                        " a valid piece.");
+            } else {
+                if (board.getSquares()[row][col].getCurrentPiece().getColor() != Color.WHITE) {
+                    observer.updateLabel(board.getSquares()[row][col].toString() + " contains a black piece." +
+                            "Please select a white piece.");
+                } else {
+                    observer.updateLabel(board.getSquares()[row][col].toString() + " selected.");
+                    selectedPiece = board.getSquares()[row][col].getCurrentPiece();
+                    selectedPiece.findAllMoves();
+                    gameState = GameState.WHITE_SELECT_MOVE;
+                }
+            }
+        }
 
-        } else if (gameState == GameState.WHITE_SELECT_MOVE) {
-
-        } else if (gameState == GameState.BLACK_SELECT_PIECE) {
-
-        } else {
+        else if (gameState == GameState.WHITE_SELECT_MOVE) {
+            selectMove(row, col, player2);
+            gameState = GameState.BLACK_SELECT_PIECE;
 
         }
+
+        else if (gameState == GameState.BLACK_SELECT_PIECE) {
+            if (!board.getSquares()[row][col].isOccupied()) {
+                observer.updateLabel(board.getSquares()[row][col].toString() + " is an empty square! Select" +
+                        " a valid piece.");
+            } else {
+                if (board.getSquares()[row][col].getCurrentPiece().getColor() != Color.BLACK) {
+                    observer.updateLabel(board.getSquares()[row][col].toString() + " contains a white piece." +
+                            "Please select a black piece.");
+                } else {
+                    observer.updateLabel(board.getSquares()[row][col].toString() + " selected.");
+                    selectedPiece = board.getSquares()[row][col].getCurrentPiece();
+                    selectedPiece.findAllMoves();
+                    gameState = GameState.BLACK_SELECT_MOVE;
+                }
+            }
+        }
+
+        else if (gameState == GameState.BLACK_SELECT_MOVE) {
+            selectMove(row, col, player);
+            gameState = GameState.WHITE_SELECT_PIECE;
+        }
+    }
+
+    public void selectMove(int row, int col, Player player) {
+        if (board.getSquares()[row][col].isOccupied()) {
+            if (board.getSquares()[row][col].getCurrentPiece().getColor() == selectedPiece.getColor()) {
+                 observer.updateLabel(board.getSquares()[row][col].toString() + " selected");
+                 board.getSquares()[row][col].getCurrentPiece().findAllMoves();
+            } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
+                player.removePiece(board.getSquares()[row][col].getCurrentPiece());
+                replacePieces(row, col);
+            }
+        } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
+            replacePieces(row, col);
+        }
+    }
+
+    public void replacePieces(int row, int col) {
+        Square originalSquare = selectedPiece.getCurrentSquare();
+        originalSquare.setOccupiedFalse();
+        board.getSquares()[row][col].setCurrentPiece(selectedPiece);
+        observer.updateButton(originalSquare);
+        observer.updateButton(board.getSquares()[row][col]);
+        observer.updateLabel(originalSquare.toString() + " -> " + board.getSquares()[row][col].toString() +
+                " selected.");
     }
 
     /**

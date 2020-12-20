@@ -25,6 +25,7 @@ public class Knight extends ChessPiece {
      * this piece can make in the current turn.
      */
     public void findAllMoves() {
+        validMoves.clear();
         verifyMove(row + 2, col + 1);
         verifyMove(row + 2, col - 1);
         verifyMove(row + 1, col - 2);

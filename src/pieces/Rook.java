@@ -26,6 +26,7 @@ public class Rook extends ChessPiece {
      */
     @Override
     public void findAllMoves() {
+        validMoves.clear();
         verifyStraights();
     }
 

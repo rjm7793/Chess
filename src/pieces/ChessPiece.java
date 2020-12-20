@@ -178,4 +178,12 @@ public abstract class ChessPiece {
         return color;
     }
 
+    public ArrayList<Square> getValidMoves() {
+        return validMoves;
+    }
+
+    public Square getCurrentSquare() {
+        return currentSquare;
+    }
+
 }

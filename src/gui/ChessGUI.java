@@ -161,7 +161,18 @@ public class ChessGUI extends Application {
     public void updateButton(Square square) {
         int row = square.getRow();
         int col = square.getCol();
-        setButtonBackgroundImage(buttons[row][col], square);
+        if (square.isOccupied()) {
+            setButtonBackgroundImage(buttons[row][col], square);
+        } else {
+            if (square.getSquareType() == Square.SquareType.DARK) {
+                buttons[row][col].setBackground(new Background(
+                        new BackgroundFill(Color.PERU, new CornerRadii(0), Insets.EMPTY)));
+            } else {
+                buttons[row][col].setBackground(new Background(
+                        new BackgroundFill(Color.NAVAJOWHITE, new CornerRadii(0), Insets.EMPTY)));
+            }
+        }
+
     }
 
     public void updateLabel(String message) {

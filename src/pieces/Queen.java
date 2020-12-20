@@ -25,6 +25,7 @@ public class Queen extends ChessPiece {
      * this piece can make in the current turn.
      */
     public void findAllMoves() {
+        validMoves.clear();
         verifyDiagonals();
         verifyStraights();
     }
