@@ -85,9 +85,7 @@ public class ChessGame {
         }
 
         else if (gameState == GameState.WHITE_SELECT_MOVE) {
-            selectMove(row, col, player2);
-            gameState = GameState.BLACK_SELECT_PIECE;
-
+            selectMove(row, col, player2, GameState.BLACK_SELECT_PIECE);
         }
 
         else if (gameState == GameState.BLACK_SELECT_PIECE) {
@@ -108,12 +106,11 @@ public class ChessGame {
         }
 
         else if (gameState == GameState.BLACK_SELECT_MOVE) {
-            selectMove(row, col, player);
-            gameState = GameState.WHITE_SELECT_PIECE;
+            selectMove(row, col, player, GameState.WHITE_SELECT_PIECE);
         }
     }
 
-    public void selectMove(int row, int col, Player player) {
+    public void selectMove(int row, int col, Player player, GameState newGameState) {
         if (board.getSquares()[row][col].isOccupied()) {
             if (board.getSquares()[row][col].getCurrentPiece().getColor() == selectedPiece.getColor()) {
                  observer.updateLabel(board.getSquares()[row][col].toString() + " selected");
@@ -121,9 +118,11 @@ public class ChessGame {
             } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
                 player.removePiece(board.getSquares()[row][col].getCurrentPiece());
                 replacePieces(row, col);
+                this.gameState = newGameState;
             }
         } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
             replacePieces(row, col);
+            this.gameState = newGameState;
         }
     }
 
@@ -131,6 +130,7 @@ public class ChessGame {
         Square originalSquare = selectedPiece.getCurrentSquare();
         originalSquare.setOccupiedFalse();
         board.getSquares()[row][col].setCurrentPiece(selectedPiece);
+        selectedPiece.setCurrentSquare(board.getSquares()[row][col]);
         observer.updateButton(originalSquare);
         observer.updateButton(board.getSquares()[row][col]);
         observer.updateLabel(originalSquare.toString() + " -> " + board.getSquares()[row][col].toString() +

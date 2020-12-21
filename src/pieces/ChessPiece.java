@@ -185,5 +185,10 @@ public abstract class ChessPiece {
     public Square getCurrentSquare() {
         return currentSquare;
     }
+    public void setCurrentSquare(Square square) {
+        currentSquare = square;
+        row = square.getRow();
+        col = square.getCol();
+    }
 
 }
