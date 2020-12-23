@@ -26,6 +26,7 @@ public class Queen extends ChessPiece {
      */
     public void findAllMoves() {
         validMoves.clear();
+        allPiecesAttacked.clear();
         verifyDiagonals();
         verifyStraights();
     }

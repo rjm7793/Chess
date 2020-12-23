@@ -80,10 +80,12 @@ public abstract class ChessPiece {
                 if (color == Color.WHITE) {
                     if (squares[x][y].getCurrentPiece().getColor() == Color.BLACK) {
                         validMoves.add(squares[x][y]);
+                        allPiecesAttacked.add(squares[x][y].getCurrentPiece());
                     }
                 } else if (color == Color.BLACK) {
                     if (squares[x][y].getCurrentPiece().getColor() == Color.WHITE) {
                         validMoves.add(squares[x][y]);
+                        allPiecesAttacked.add(squares[x][y].getCurrentPiece());
                     }
                 }
             }
@@ -99,25 +101,29 @@ public abstract class ChessPiece {
             for (int j = 2; j < 8; j++) {
                 if (i == 0) {
                     if ((row + j - 1) <= 7 && (col + j - 1) <= 7) {
-                        if (validMoves.contains(squares[row + j - 1][col + j - 1])) {
+                        if (validMoves.contains(squares[row + j - 1][col + j - 1])
+                                && !squares[row + j - 1][col + j - 1].isOccupied()) {
                             verifyMove(row + j, col + j);
                         }
                     }
                 } else if (i == 1) {
                     if ((row + j - 1) <= 7 && (col - j + 1) >= 0) {
-                        if (validMoves.contains(squares[row + j - 1][col - j + 1])) {
+                        if (validMoves.contains(squares[row + j - 1][col - j + 1])
+                                && !squares[row + j - 1][col - j + 1].isOccupied()) {
                             verifyMove(row + j, col - j);
                         }
                     }
                 } else if (i == 2) {
                     if ((row - j + 1) >= 0 && (col + j - 1) <= 7) {
-                        if (validMoves.contains(squares[row - j + 1][col + j - 1])) {
+                        if (validMoves.contains(squares[row - j + 1][col + j - 1])
+                                && !squares[row - j + 1][col + j - 1].isOccupied()) {
                             verifyMove(row - j, col + j);
                         }
                     }
                 } else {
                     if ((row - j + 1) >= 0 && (col - j + 1) >= 0) {
-                        if (validMoves.contains(squares[row - j + 1][col - j + 1])) {
+                        if (validMoves.contains(squares[row - j + 1][col - j + 1])
+                                && !squares[row - j + 1][col - j + 1].isOccupied()) {
                             verifyMove(row - j, col - j);
                         }
                     }
@@ -136,25 +142,25 @@ public abstract class ChessPiece {
             for (int j = 2; j < 8; j++) {
                 if (i == 0) {
                     if ((col + j - 1) <= 7) {
-                        if (validMoves.contains(squares[row][col + j - 1])) {
+                        if (validMoves.contains(squares[row][col + j - 1]) && !squares[row][col + j - 1].isOccupied()) {
                             verifyMove(row, col + j);
                         }
                     }
                 } else if (i == 1) {
                     if ((row + j - 1) <= 7) {
-                        if (validMoves.contains(squares[row + j - 1][col])) {
+                        if (validMoves.contains(squares[row + j - 1][col]) && !squares[row + j - 1][col].isOccupied()) {
                             verifyMove(row + j, col);
                         }
                     }
                 } else if (i == 2) {
                     if ((col - j + 1) >= 0) {
-                        if (validMoves.contains(squares[row][col - j + 1])) {
+                        if (validMoves.contains(squares[row][col - j + 1]) && !squares[row][col - j + 1].isOccupied()) {
                             verifyMove(row, col - j);
                         }
                     }
                 } else {
                     if ((row - j + 1) >= 0) {
-                        if (validMoves.contains(squares[row - j + 1][col])) {
+                        if (validMoves.contains(squares[row - j + 1][col]) && !squares[row - j + 1][col].isOccupied()) {
                             verifyMove(row - j, col);
                         }
                     }
@@ -185,6 +191,11 @@ public abstract class ChessPiece {
     public Square getCurrentSquare() {
         return currentSquare;
     }
+
+    public ArrayList<ChessPiece> getPiecesAttacked() {
+        return allPiecesAttacked;
+    }
+
     public void setCurrentSquare(Square square) {
         currentSquare = square;
         row = square.getRow();

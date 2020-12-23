@@ -26,6 +26,7 @@ public class Knight extends ChessPiece {
      */
     public void findAllMoves() {
         validMoves.clear();
+        allPiecesAttacked.clear();
         verifyMove(row + 2, col + 1);
         verifyMove(row + 2, col - 1);
         verifyMove(row + 1, col - 2);

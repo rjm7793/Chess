@@ -86,6 +86,7 @@ public class Pawn extends ChessPiece {
      */
     public void findAllMoves() {
         validMoves.clear();
+        allPiecesAttacked.clear();
         // Finds all potential moves for white pawns
         if (color == Color.WHITE) {
             verifyMove(row - 1, col);

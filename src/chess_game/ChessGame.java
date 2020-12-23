@@ -1,7 +1,7 @@
 package chess_game;
 
 import gui.ChessGUI;
-import pieces.ChessPiece;
+import pieces.*;
 
 import java.util.ArrayList;
 
@@ -48,6 +48,9 @@ public class ChessGame {
      */
     private Player player2;
 
+    /**
+     * The current selected piece by either player.
+     */
     private ChessPiece selectedPiece;
 
     /**
@@ -84,8 +87,9 @@ public class ChessGame {
             }
         }
 
+        //
         else if (gameState == GameState.WHITE_SELECT_MOVE) {
-            selectMove(row, col, player2, GameState.BLACK_SELECT_PIECE);
+            selectMove(row, col, player, GameState.BLACK_SELECT_PIECE);
         }
 
         else if (gameState == GameState.BLACK_SELECT_PIECE) {
@@ -106,7 +110,7 @@ public class ChessGame {
         }
 
         else if (gameState == GameState.BLACK_SELECT_MOVE) {
-            selectMove(row, col, player, GameState.WHITE_SELECT_PIECE);
+            selectMove(row, col, player2, GameState.WHITE_SELECT_PIECE);
         }
     }
 
@@ -114,27 +118,136 @@ public class ChessGame {
         if (board.getSquares()[row][col].isOccupied()) {
             if (board.getSquares()[row][col].getCurrentPiece().getColor() == selectedPiece.getColor()) {
                  observer.updateLabel(board.getSquares()[row][col].toString() + " selected");
-                 board.getSquares()[row][col].getCurrentPiece().findAllMoves();
+                 selectedPiece = board.getSquares()[row][col].getCurrentPiece();
+                 selectedPiece.findAllMoves();
             } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
-                player.removePiece(board.getSquares()[row][col].getCurrentPiece());
-                replacePieces(row, col);
-                this.gameState = newGameState;
+                ChessPiece attackedPiece = board.getSquares()[row][col].getCurrentPiece();
+                if (replacePieces(row, col, player.getColor(), newGameState)) {
+                    player.removePiece(attackedPiece);
+                }
             }
         } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
-            replacePieces(row, col);
-            this.gameState = newGameState;
+            replacePieces(row, col, player.getColor(), newGameState);
         }
     }
 
-    public void replacePieces(int row, int col) {
+    public boolean replacePieces(int row, int col, Color playerColor, GameState newGameState) {
+        if (isKingSafe(row, col, playerColor)) {
+            Square originalSquare = selectedPiece.getCurrentSquare();
+            originalSquare.setOccupiedFalse();
+            board.getSquares()[row][col].setCurrentPiece(selectedPiece);
+            selectedPiece.setCurrentSquare(board.getSquares()[row][col]);
+            observer.updateButton(originalSquare);
+            observer.updateButton(board.getSquares()[row][col]);
+            observer.updateLabel(originalSquare.toString() + " -> " + board.getSquares()[row][col].toString() +
+                    " selected.");
+            if (selectedPiece instanceof Pawn) {
+                ((Pawn) selectedPiece).setFirstMove();
+            }
+            this.gameState = newGameState;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Further verifies the legality of a move by checking if the player's King is being attacked
+     * or not after the valid move is completed. If the King is being attacked, the move cannot
+     * be executed.
+     *
+     * Does this by simulating the move of the selected piece and then assessing the board by replacing
+     * the King with a Rook, Bishop, Knight, and Pawn to check if any of these pieces are attacking a respective
+     * piece of the opposing color. If they are attacking a respective piece of the opposing color, the King
+     * is not safe.
+     *
+     * @return true if King is safe, false if King is not safe.
+     */
+    public boolean isKingSafe(int row, int col, Color kingColor) {
+        King king;
+        if (kingColor == player.getColor()) {
+            king = player.getKing();
+        } else {
+            king = player2.getKing();
+        }
         Square originalSquare = selectedPiece.getCurrentSquare();
         originalSquare.setOccupiedFalse();
+        ChessPiece replacedPiece = null;
+        boolean replaced = false;
+        if (board.getSquares()[row][col].isOccupied()) {
+            replacedPiece = board.getSquares()[row][col].getCurrentPiece();
+            replaced = true;
+        }
         board.getSquares()[row][col].setCurrentPiece(selectedPiece);
         selectedPiece.setCurrentSquare(board.getSquares()[row][col]);
-        observer.updateButton(originalSquare);
-        observer.updateButton(board.getSquares()[row][col]);
-        observer.updateLabel(originalSquare.toString() + " -> " + board.getSquares()[row][col].toString() +
-                " selected.");
+        Square kingSquare = king.getCurrentSquare();
+
+        kingSquare.setCurrentPiece(new Rook(board, king.getCurrentSquare(), kingColor));
+        kingSquare.getCurrentPiece().findAllMoves();
+        for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
+            ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
+            if (pieceAttacked instanceof Rook || pieceAttacked instanceof Queen) {
+                return resetSimulation(row, col, king, originalSquare, replacedPiece, replaced, kingSquare);
+            }
+        }
+
+        kingSquare.setCurrentPiece(new Bishop(board, king.getCurrentSquare(), kingColor));
+        kingSquare.getCurrentPiece().findAllMoves();
+        for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
+            ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
+            if (pieceAttacked instanceof Bishop || pieceAttacked instanceof Queen) {
+                return resetSimulation(row, col, king, originalSquare, replacedPiece, replaced, kingSquare);
+            }
+        }
+
+        kingSquare.setCurrentPiece(new Knight(board, king.getCurrentSquare(), kingColor));
+        kingSquare.getCurrentPiece().findAllMoves();
+        for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
+            ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
+            if (pieceAttacked instanceof Knight) {
+                return resetSimulation(row, col, king, originalSquare, replacedPiece, replaced, kingSquare);
+            }
+        }
+
+        kingSquare.setCurrentPiece(new Pawn(board, king.getCurrentSquare(), kingColor));
+        kingSquare.getCurrentPiece().findAllMoves();
+        for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
+            ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
+            if (pieceAttacked instanceof Pawn) {
+                return resetSimulation(row, col, king, originalSquare, replacedPiece, replaced, kingSquare);
+            }
+        }
+
+        kingSquare.setCurrentPiece(king);
+        kingSquare.getCurrentPiece().findAllMoves();
+        for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
+            ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
+            if (pieceAttacked instanceof King) {
+                return resetSimulation(row, col, king, originalSquare, replacedPiece, replaced, kingSquare);
+            }
+        }
+
+        kingSquare.setCurrentPiece(king);
+        if (replaced) {
+            board.getSquares()[row][col].setCurrentPiece(replacedPiece);
+        } else {
+            board.getSquares()[row][col].setOccupiedFalse();
+        }
+        originalSquare.setCurrentPiece(selectedPiece);
+        selectedPiece.setCurrentSquare(originalSquare);
+        return true;
+    }
+
+    public boolean resetSimulation(int row, int col, King king, Square originalSquare, ChessPiece replacedPiece,
+                                   boolean replaced, Square kingSquare) {
+        kingSquare.setCurrentPiece(king);
+        if (replaced) {
+            board.getSquares()[row][col].setCurrentPiece(replacedPiece);
+        } else {
+            board.getSquares()[row][col].setOccupiedFalse();
+        }
+        originalSquare.setCurrentPiece(selectedPiece);
+        selectedPiece.setCurrentSquare(originalSquare);
+        return false;
     }
 
     /**
@@ -143,22 +256,6 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
-    }
-
-    /**
-     * Returns the GameState.
-     * @return the game state
-     */
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    /**
-     * Sets this game's GameState.
-     * @param state the game state to set the game to
-     */
-    public void setGameState(GameState state) {
-        gameState = state;
     }
 
     /**

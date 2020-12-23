@@ -1,6 +1,7 @@
 package chess_game;
 
 import pieces.ChessPiece;
+import pieces.King;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,8 @@ public class Player {
 
     private ArrayList<ChessPiece> pieces;
 
+    private King king;
+
     /**
      * The number of pieces remaining for this player.
      */
@@ -38,6 +41,9 @@ public class Player {
 
     public void addPiece(ChessPiece piece) {
         pieces.add(piece);
+        if (piece instanceof King) {
+            king = (King) piece;
+        }
         numPieces++;
     }
 
@@ -50,7 +56,15 @@ public class Player {
         return numPieces;
     }
 
+    public King getKing() {
+        return king;
+    }
+
     public ArrayList<ChessPiece> getPieces() {
         return pieces;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }
