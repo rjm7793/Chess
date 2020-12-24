@@ -103,6 +103,9 @@ public class Pawn extends ChessPiece {
         }
     }
 
+    /**
+     * Indicates that it is no longer this Pawn's first move.
+     */
     public void setFirstMove() {
         firstMove = false;
     }

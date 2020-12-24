@@ -92,36 +92,47 @@ public abstract class ChessPiece {
         }
     }
 
+    /**
+     * Checks for valid moves branching diagonally from this piece.
+     *
+     * Used to verify all moves for Bishops and diagonal moves for Queens.
+     */
     public void verifyDiagonals() {
+        // Checks validity of all moves one square away from this piece.
         verifyMove(row + 1, col + 1);
         verifyMove(row + 1, col - 1);
         verifyMove(row - 1, col + 1);
         verifyMove(row - 1, col - 1);
+        // Checks validity of moves in all 4 diagonal directions. Stops reading in a given direction
+        // if the move one square closer to this piece is not valid. It would not be possible for any further moves
+        // in that direction to be valid.
+        //
+        // Ex: If (row + 1, col + 1) is not valid, (row + 2, col + 2) cannot be valid and is not checked.
         for (int i = 0; i < 4; i++) {
             for (int j = 2; j < 8; j++) {
                 if (i == 0) {
-                    if ((row + j - 1) <= 7 && (col + j - 1) <= 7) {
+                    if ((row + j - 1) <= 7 && (col + j - 1) <= 7) { // Checks moves that branch down and to the right.
                         if (validMoves.contains(squares[row + j - 1][col + j - 1])
                                 && !squares[row + j - 1][col + j - 1].isOccupied()) {
                             verifyMove(row + j, col + j);
                         }
                     }
                 } else if (i == 1) {
-                    if ((row + j - 1) <= 7 && (col - j + 1) >= 0) {
+                    if ((row + j - 1) <= 7 && (col - j + 1) >= 0) { // Checks moves that branch down and to the left.
                         if (validMoves.contains(squares[row + j - 1][col - j + 1])
                                 && !squares[row + j - 1][col - j + 1].isOccupied()) {
                             verifyMove(row + j, col - j);
                         }
                     }
                 } else if (i == 2) {
-                    if ((row - j + 1) >= 0 && (col + j - 1) <= 7) {
+                    if ((row - j + 1) >= 0 && (col + j - 1) <= 7) { // Checks moves that branch up and to the right.
                         if (validMoves.contains(squares[row - j + 1][col + j - 1])
                                 && !squares[row - j + 1][col + j - 1].isOccupied()) {
                             verifyMove(row - j, col + j);
                         }
                     }
                 } else {
-                    if ((row - j + 1) >= 0 && (col - j + 1) >= 0) {
+                    if ((row - j + 1) >= 0 && (col - j + 1) >= 0) { // Checks moves that branch up and to the left.
                         if (validMoves.contains(squares[row - j + 1][col - j + 1])
                                 && !squares[row - j + 1][col - j + 1].isOccupied()) {
                             verifyMove(row - j, col - j);
@@ -133,33 +144,44 @@ public abstract class ChessPiece {
         }
     }
 
+    /**
+     * Checks for valid moves branching horizontally and vertically from this piece.
+     *
+     * Used to verify all moves for Rooks and horizontal/vertical moves for Queens.
+     */
     public void verifyStraights() {
+        // Checks validity of all moves one square away from this piece.
         verifyMove(row, col + 1);
         verifyMove(row + 1, col);
         verifyMove(row, col - 1);
         verifyMove(row - 1, col);
+        // Checks validity of moves in all 4 horizontal and vertical directions. Stops reading in a given direction
+        // if the move one square closer to this piece is not valid. It would not be possible for any further moves
+        // in that direction to be valid.
+        //
+        // Ex: If (row + 1, col) is not valid, (row + 2, col) cannot be valid and is not checked.
         for (int i = 0; i < 4; i++) {
             for (int j = 2; j < 8; j++) {
                 if (i == 0) {
-                    if ((col + j - 1) <= 7) {
+                    if ((col + j - 1) <= 7) { // Checks moves that branch to the right.
                         if (validMoves.contains(squares[row][col + j - 1]) && !squares[row][col + j - 1].isOccupied()) {
                             verifyMove(row, col + j);
                         }
                     }
                 } else if (i == 1) {
-                    if ((row + j - 1) <= 7) {
+                    if ((row + j - 1) <= 7) { // Checks moves that branch downward.
                         if (validMoves.contains(squares[row + j - 1][col]) && !squares[row + j - 1][col].isOccupied()) {
                             verifyMove(row + j, col);
                         }
                     }
                 } else if (i == 2) {
-                    if ((col - j + 1) >= 0) {
+                    if ((col - j + 1) >= 0) { // Checks moves that branch to the left.
                         if (validMoves.contains(squares[row][col - j + 1]) && !squares[row][col - j + 1].isOccupied()) {
                             verifyMove(row, col - j);
                         }
                     }
                 } else {
-                    if ((row - j + 1) >= 0) {
+                    if ((row - j + 1) >= 0) { // Checks moves that branch upward.
                         if (validMoves.contains(squares[row - j + 1][col]) && !squares[row - j + 1][col].isOccupied()) {
                             verifyMove(row - j, col);
                         }
@@ -184,18 +206,34 @@ public abstract class ChessPiece {
         return color;
     }
 
+    /**
+     * Returns an ArrayList holding all the valid moves of this piece.
+     * @return the ArrayList of valid moves
+     */
     public ArrayList<Square> getValidMoves() {
         return validMoves;
     }
 
+    /**
+     * Returns the Square that this piece is standing on
+     * @return the Square this piece is on
+     */
     public Square getCurrentSquare() {
         return currentSquare;
     }
 
+    /**
+     * Returns an ArrayList holding all the pieces that this piece can attack this turn.
+     * @return the ArrayList of pieces attacked by this piece.
+     */
     public ArrayList<ChessPiece> getPiecesAttacked() {
         return allPiecesAttacked;
     }
 
+    /**
+     * Sets the current Square of this piece to a given square and updates the row and column of this piece.
+     * @param square the Square to update this piece's current square to.
+     */
     public void setCurrentSquare(Square square) {
         currentSquare = square;
         row = square.getRow();

@@ -14,12 +14,15 @@ public class ChessBoard {
      */
     private Square[][] squares;
 
+    /**
+     * Both chess Players
+     */
     private Player white;
     private Player black;
 
     /**
      * Initializes the 2d array of squares and sets up the board with each piece in its
-     * proper position.
+     * proper position. Adds the pieces to their respective player's piece list.
      */
     public ChessBoard(Player player1, Player player2) {
         white = player1;

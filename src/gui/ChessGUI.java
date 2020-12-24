@@ -86,7 +86,7 @@ public class ChessGUI extends Application {
                 int finalRow = row;
                 int finalCol = col;
                 buttons[row][col].setOnAction(e -> {
-                    model.update(finalRow, finalCol);
+                    model.updateGame(finalRow, finalCol);
                 });
             }
         }
@@ -158,12 +158,17 @@ public class ChessGUI extends Application {
         button.setBackground(background);
     }
 
+    /**
+     * Updates the image of the Button corresponding to an updated Square on the chess board to account
+     * for a new or removed piece.
+     * @param square the square that was updated. Used to find the index of the corresponding Button
+     */
     public void updateButton(Square square) {
         int row = square.getRow();
         int col = square.getCol();
         if (square.isOccupied()) {
             setButtonBackgroundImage(buttons[row][col], square);
-        } else {
+        } else { // if the updated square is empty, removes the old piece.
             if (square.getSquareType() == Square.SquareType.DARK) {
                 buttons[row][col].setBackground(new Background(
                         new BackgroundFill(Color.PERU, new CornerRadii(0), Insets.EMPTY)));
@@ -175,6 +180,10 @@ public class ChessGUI extends Application {
 
     }
 
+    /**
+     * Updates the upper label that displays information about the game with a given message.
+     * @param message the message to update the label's text to
+     */
     public void updateLabel(String message) {
         this.message.setText(message);
     }
@@ -211,5 +220,4 @@ public class ChessGUI extends Application {
             }
         }
     }
-
 }

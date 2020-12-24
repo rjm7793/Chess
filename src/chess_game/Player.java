@@ -14,15 +14,19 @@ public class Player {
 
     // TODO: Add a timer to Player class after finishing the game.
 
-    // TODO: Comment everything in Player and ChessBoard regarding the piece list.
-
     /**
      * Color of the pieces this player can control
      */
     private Color color;
 
+    /**
+     * A list of all pieces that are active from this player.
+     */
     private ArrayList<ChessPiece> pieces;
 
+    /**
+     * This player's King piece.
+     */
     private King king;
 
     /**
@@ -39,6 +43,11 @@ public class Player {
         pieces = new ArrayList<>();
     }
 
+    /**
+     * Adds a piece to this player's piece list.
+     * If the piece is a King, will store the piece in a separate field.
+     * @param piece the piece to be added
+     */
     public void addPiece(ChessPiece piece) {
         pieces.add(piece);
         if (piece instanceof King) {
@@ -47,23 +56,27 @@ public class Player {
         numPieces++;
     }
 
+    /**
+     * Removes a piece from this player's piece list due to it being captured.
+     * @param piece the piece that was captured
+     */
     public void removePiece(ChessPiece piece) {
         pieces.remove(piece);
         numPieces--;
     }
 
-    public int getNumPieces() {
-        return numPieces;
-    }
-
+    /**
+     * Returns this player's King
+     * @return ChessPiece that is an instance of a King.
+     */
     public King getKing() {
         return king;
     }
 
-    public ArrayList<ChessPiece> getPieces() {
-        return pieces;
-    }
-
+    /**
+     * Returns this player's piece color.
+     * @return the color of this player's pieces.
+     */
     public Color getColor() {
         return color;
     }

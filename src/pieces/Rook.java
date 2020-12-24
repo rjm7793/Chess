@@ -24,7 +24,6 @@ public class Rook extends ChessPiece {
      * Adds to the list of valid moves this piece can make by finding every valid move
      * this piece can make in the current turn.
      */
-    @Override
     public void findAllMoves() {
         validMoves.clear();
         allPiecesAttacked.clear();
