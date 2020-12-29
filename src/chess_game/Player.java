@@ -30,11 +30,6 @@ public class Player {
     private King king;
 
     /**
-     * The number of pieces remaining for this player.
-     */
-    private int numPieces;
-
-    /**
      * Constructor for Player.
      * @param color color of this player's pieces
      */
@@ -53,7 +48,6 @@ public class Player {
         if (piece instanceof King) {
             king = (King) piece;
         }
-        numPieces++;
     }
 
     /**
@@ -62,7 +56,6 @@ public class Player {
      */
     public void removePiece(ChessPiece piece) {
         pieces.remove(piece);
-        numPieces--;
     }
 
     /**
@@ -71,6 +64,10 @@ public class Player {
      */
     public King getKing() {
         return king;
+    }
+
+    public ArrayList<ChessPiece> getPieces() {
+        return pieces;
     }
 
     /**

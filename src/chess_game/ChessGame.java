@@ -63,6 +63,8 @@ public class ChessGame {
         gameState = GameState.WHITE_SELECT_PIECE;
     }
 
+    // TODO: ADD PRECONDITIONS AND POSTCONDITIONS FOR EACH OF THESE FUNCTIONS IN THEIR DOCUMENTATION.
+
     /**
      * Updates the game based on the current GameState given the index of a square selected by one of the players.
      *
@@ -99,9 +101,14 @@ public class ChessGame {
         }
 
         // Verifies the validity of a move selected by the player controlling the white pieces. If valid,
-        // executes the move if it does not leave the player in check.
+        // executes the move if it does not leave the player in check. Once the move is executed, sees if
+        // the player controlling the black pieces is in checkmate.
         else if (gameState == GameState.WHITE_SELECT_MOVE) {
-            verifySelection(row, col, player, GameState.BLACK_SELECT_PIECE);
+            if (verifySelection(row, col, player, GameState.BLACK_SELECT_PIECE)) {
+                if (checkmate(player2)) {
+                    observer.updateLabel("Checkmate! White wins!");
+                }
+            }
         }
 
         // Verifies if a selected square contains a black piece.
@@ -123,10 +130,39 @@ public class ChessGame {
         }
 
         // Verifies the validity of a move selected by the player controlling the black pieces. If valid,
-        // executes the move if it does not leave the player in check.
+        // executes the move if it does not leave the player in check. Once the move is executed, sees if
+        // the player controlling the white pieces is in checkmate.
         else if (gameState == GameState.BLACK_SELECT_MOVE) {
-            verifySelection(row, col, player2, GameState.WHITE_SELECT_PIECE);
+            if (verifySelection(row, col, player2, GameState.WHITE_SELECT_PIECE)) {
+                if (checkmate(player)) {
+                    observer.updateLabel("Checkmate! Black wins!");
+                }
+            }
         }
+    }
+
+    /**
+     * Checks if a given player is in checkmate by iterating through all of their remaining pieces
+     * and seeing if there exists any valid moves that don't leave the player's King in check.
+     *
+     * If the player's remaining pieces have no valid moves that don't leave the King in check,
+     * the player is found to be in checkmate.
+     *
+     * @param player the player that will be inspected for being in checkmate
+     * @return true if the player is in checkmate, false if not
+     */
+    public boolean checkmate(Player player) {
+        for (int i = 0; i < player.getPieces().size(); i++) {
+            player.getPieces().get(i).findAllMoves();
+            selectedPiece = player.getPieces().get(i);
+            for (int j = 0; j < player.getPieces().get(i).getValidMoves().size(); j++) {
+                Square validMove = player.getPieces().get(i).getValidMoves().get(j);
+                if (isKingSafe(validMove.getRow(), validMove.getCol(), player)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -140,8 +176,9 @@ public class ChessGame {
      * @param col The column of the selected move.
      * @param player The player that selected the move.
      * @param newGameState new GameState to be switched to if move is executed.
+     * @return true if a move if executed, false if another piece is selected instead.
      */
-    public void verifySelection(int row, int col, Player player, GameState newGameState) {
+    public boolean verifySelection(int row, int col, Player player, GameState newGameState) {
         if (board.getSquares()[row][col].isOccupied()) {
             if (board.getSquares()[row][col].getCurrentPiece().getColor() == selectedPiece.getColor()) {
                 // If the selected square occupies the same color piece as the player, re-selects the piece
@@ -149,6 +186,7 @@ public class ChessGame {
                  observer.updateLabel(board.getSquares()[row][col].toString() + " selected");
                  selectedPiece = board.getSquares()[row][col].getCurrentPiece();
                  selectedPiece.findAllMoves();
+                 return false;
             } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
                 // Tries to execute the selected move. If successful, removes the attacked piece from piece list
                 // of the player that did not move this turn.
@@ -159,12 +197,15 @@ public class ChessGame {
                     } else if (player.getColor() == Color.BLACK) {
                         player2.removePiece(attackedPiece);
                     }
+                    return true;
                 }
             }
         } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
             // Tries to execute the selected move to the empty square.
             executeMove(row, col, player, newGameState);
+            return true;
         }
+        return true;
     }
 
     /**
