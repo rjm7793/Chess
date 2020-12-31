@@ -109,8 +109,9 @@ public class ChessGUI extends Application {
             colLabel.setFont(new Font("Arial", 70));
             hBox.getChildren().add(colLabel);
         }
+        hBox.setSpacing(35);
 
-        message = new Label("ches s");
+        message = new Label("chess");
         message.setFont(new Font("Arial", 80));
 
         borderPane = new BorderPane();

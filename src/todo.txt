@@ -1,0 +1,7 @@
+CHESS PROJECT TO DO LIST (high priority to low):
+
+- Finish chess functionality (stalemate, en passant, castling, underpromotion)
+- Refactor code and provide more in-depth documentation of functions with examples, preconditions, postconditions
+- Work on improving GUI design
+- Begin research on minimax algorithm and plan out chess AI design
+- Begin work on chess AI

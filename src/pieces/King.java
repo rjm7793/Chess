@@ -2,6 +2,7 @@ package pieces;
 
 import chess_game.ChessBoard;
 import chess_game.Color;
+import chess_game.Player;
 import chess_game.Square;
 
 import java.util.ArrayList;
@@ -13,13 +14,19 @@ import java.util.ArrayList;
 public class King extends ChessPiece {
 
     /**
+     * Tells if this King is in check or not. Used to differentiate between checkmate and stalemate.
+     */
+    private boolean check;
+
+    /**
      * Constructor for a King
      * @param board the board this piece belongs to
      * @param square the square this piece is on
-     * @param color the color of this piece
+     * @param player the player that owns this piece
      */
-    public King(ChessBoard board, Square square, Color color) {
-        super(board, square, color);
+    public King(ChessBoard board, Square square, Player player) {
+        super(board, square, player);
+        check = false;
     }
 
     /**
@@ -37,6 +44,14 @@ public class King extends ChessPiece {
         verifyMove(row - 1, col - 1);
         verifyMove(row, col - 1);
         verifyMove(row + 1, col - 1);
+    }
+
+    public void setCheck(boolean inCheck) {
+        this.check = inCheck;
+    }
+
+    public boolean getCheck() {
+        return check;
     }
 
     /**

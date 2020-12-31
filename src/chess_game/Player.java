@@ -56,6 +56,7 @@ public class Player {
      */
     public void removePiece(ChessPiece piece) {
         pieces.remove(piece);
+        pieces.trimToSize();
     }
 
     /**

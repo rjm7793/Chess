@@ -2,6 +2,7 @@ package pieces;
 
 import chess_game.ChessBoard;
 import chess_game.Color;
+import chess_game.Player;
 import chess_game.Square;
 
 /**
@@ -20,10 +21,10 @@ public class Pawn extends ChessPiece {
      * Constructor for a Pawn
      * @param board the board this piece belongs to
      * @param square the square this piece is on
-     * @param color the color of this piece
+     * @param player the player that owns this piece
      */
-    public Pawn(ChessBoard board, Square square, Color color) {
-        super(board, square, color);
+    public Pawn(ChessBoard board, Square square, Player player) {
+        super(board, square, player);
         firstMove = true;
     }
 
@@ -72,6 +73,9 @@ public class Pawn extends ChessPiece {
                 if (y != col) {
                     // Checks if the piece on the diagonal is of the opposing color before validating the move.
                     if (color != squares[x][y].getCurrentPiece().getColor()) {
+                        if (squares[x][y].getCurrentPiece() instanceof King) {
+                            ((King) squares[x][y].getCurrentPiece()).setCheck(true);
+                        }
                         validMoves.add(squares[x][y]);
                         allPiecesAttacked.add(squares[x][y].getCurrentPiece());
                     }
@@ -108,6 +112,30 @@ public class Pawn extends ChessPiece {
      */
     public void setFirstMove() {
         firstMove = false;
+    }
+
+    /**
+     * Sets the current Square of this piece to a given square and updates the row and column of this piece.
+     *
+     * If this Pawn reaches the other side of the board, it is promoted to a new piece and the player's piece
+     * list is updated.
+     *
+     * @param square the Square to update this piece's current square to.
+     */
+    @Override
+    public void setCurrentSquare(Square square) {
+        currentSquare = square;
+        row = square.getRow();
+        col = square.getCol();
+        if ((color == Color.BLACK && row == 7) || (color == Color.WHITE && row == 0)) {
+            currentSquare.setCurrentPiece(new Queen(board, currentSquare, player));
+            player.addPiece(squares[row][col].getCurrentPiece());
+            player.removePiece(this);
+        }
+    }
+
+    public void setSquareWithoutPromotion(Square square) {
+        super.setCurrentSquare(square);
     }
 
     /**

@@ -2,6 +2,7 @@ package pieces;
 
 import chess_game.ChessBoard;
 import chess_game.Color;
+import chess_game.Player;
 import chess_game.Square;
 
 /**
@@ -14,10 +15,10 @@ public class Bishop extends ChessPiece {
      * Constructor for a Bishop
      * @param board the board this piece belongs to
      * @param square the square this piece is on
-     * @param color the color of this piece
+     * @param player the player that owns this piece
      */
-    public Bishop(ChessBoard board, Square square, Color color) {
-        super(board, square, color);
+    public Bishop(ChessBoard board, Square square, Player player) {
+        super(board, square, player);
     }
 
     /**

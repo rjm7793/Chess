@@ -63,8 +63,6 @@ public class ChessGame {
         gameState = GameState.WHITE_SELECT_PIECE;
     }
 
-    // TODO: ADD PRECONDITIONS AND POSTCONDITIONS FOR EACH OF THESE FUNCTIONS IN THEIR DOCUMENTATION.
-
     /**
      * Updates the game based on the current GameState given the index of a square selected by one of the players.
      *
@@ -105,9 +103,11 @@ public class ChessGame {
         // the player controlling the black pieces is in checkmate.
         else if (gameState == GameState.WHITE_SELECT_MOVE) {
             if (verifySelection(row, col, player, GameState.BLACK_SELECT_PIECE)) {
-                if (checkmate(player2)) {
+                if (checkmate(player2, player)) {
                     observer.updateLabel("Checkmate! White wins!");
                 }
+                player.getKing().setCheck(false); // If the game is not ended, the white king is guaranteed to not be
+                                                  // in check at this point.
             }
         }
 
@@ -134,24 +134,29 @@ public class ChessGame {
         // the player controlling the white pieces is in checkmate.
         else if (gameState == GameState.BLACK_SELECT_MOVE) {
             if (verifySelection(row, col, player2, GameState.WHITE_SELECT_PIECE)) {
-                if (checkmate(player)) {
+                if (checkmate(player, player2)) {
                     observer.updateLabel("Checkmate! Black wins!");
                 }
             }
+            player2.getKing().setCheck(false); // If the game is not ended, the black king is guaranteed to not be
+                                               // in check at this point.
         }
     }
 
     /**
-     * Checks if a given player is in checkmate by iterating through all of their remaining pieces
+     * Checks if a given player is in checkmate or stalemate by iterating through all of their remaining pieces
      * and seeing if there exists any valid moves that don't leave the player's King in check.
      *
-     * If the player's remaining pieces have no valid moves that don't leave the King in check,
+     * If the player's remaining pieces have no valid moves left and their King is in check,
      * the player is found to be in checkmate.
+     *
+     * If the player's remaining pieces have no valid moves left and their King is not in check,
+     * the game ends in a stalemate.
      *
      * @param player the player that will be inspected for being in checkmate
      * @return true if the player is in checkmate, false if not
      */
-    public boolean checkmate(Player player) {
+    public boolean checkmate(Player player, Player attackingPlayer) {
         for (int i = 0; i < player.getPieces().size(); i++) {
             player.getPieces().get(i).findAllMoves();
             selectedPiece = player.getPieces().get(i);
@@ -162,7 +167,15 @@ public class ChessGame {
                 }
             }
         }
-        return true;
+        for (int i = 0; i < attackingPlayer.getPieces().size(); i++) {
+            attackingPlayer.getPieces().get(i).findAllMoves();
+        }
+        if (player.getKing().getCheck()) {
+            observer.updateLabel("Checkmate!");
+        } else if (!player.getKing().getCheck()) {
+            observer.updateLabel("Stalemate");
+        }
+        return false; // FIX THE RETURN STATEMENT ON THIS FUNCTION WITH DETAILED LABEL MESSAGES
     }
 
     /**
@@ -180,7 +193,7 @@ public class ChessGame {
      */
     public boolean verifySelection(int row, int col, Player player, GameState newGameState) {
         if (board.getSquares()[row][col].isOccupied()) {
-            if (board.getSquares()[row][col].getCurrentPiece().getColor() == selectedPiece.getColor()) {
+            if (board.getSquares()[row][col].getCurrentPiece().getColor() == player.getColor()) {
                 // If the selected square occupies the same color piece as the player, re-selects the piece
                 // to be moved and does not execute any move.
                  observer.updateLabel(board.getSquares()[row][col].toString() + " selected");
@@ -193,19 +206,18 @@ public class ChessGame {
                 ChessPiece attackedPiece = board.getSquares()[row][col].getCurrentPiece();
                 if (executeMove(row, col, player, newGameState)) {
                     if (player.getColor() == Color.WHITE) {
-                        this.player.removePiece(attackedPiece);
-                    } else if (player.getColor() == Color.BLACK) {
                         player2.removePiece(attackedPiece);
+                    } else if (player.getColor() == Color.BLACK) {
+                        this.player.removePiece(attackedPiece);
                     }
                     return true;
                 }
             }
         } else if (selectedPiece.getValidMoves().contains(board.getSquares()[row][col])) {
             // Tries to execute the selected move to the empty square.
-            executeMove(row, col, player, newGameState);
-            return true;
+            return executeMove(row, col, player, newGameState);
         }
-        return true;
+        return false;
     }
 
     /**
@@ -267,10 +279,14 @@ public class ChessGame {
             replaced = true;
         }
         board.getSquares()[row][col].setCurrentPiece(selectedPiece);
-        selectedPiece.setCurrentSquare(board.getSquares()[row][col]);
+        if (selectedPiece instanceof Pawn) {
+            ((Pawn) selectedPiece).setSquareWithoutPromotion(board.getSquares()[row][col]);
+        } else {
+            selectedPiece.setCurrentSquare(board.getSquares()[row][col]);
+        }
         Square kingSquare = king.getCurrentSquare();
 
-        kingSquare.setCurrentPiece(new Rook(board, king.getCurrentSquare(), player.getColor()));
+        kingSquare.setCurrentPiece(new Rook(board, king.getCurrentSquare(), player));
         kingSquare.getCurrentPiece().findAllMoves();
         for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
             ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
@@ -280,7 +296,7 @@ public class ChessGame {
             }
         }
 
-        kingSquare.setCurrentPiece(new Bishop(board, king.getCurrentSquare(), player.getColor()));
+        kingSquare.setCurrentPiece(new Bishop(board, king.getCurrentSquare(), player));
         kingSquare.getCurrentPiece().findAllMoves();
         for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
             ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
@@ -290,7 +306,7 @@ public class ChessGame {
             }
         }
 
-        kingSquare.setCurrentPiece(new Knight(board, king.getCurrentSquare(), player.getColor()));
+        kingSquare.setCurrentPiece(new Knight(board, king.getCurrentSquare(), player));
         kingSquare.getCurrentPiece().findAllMoves();
         for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
             ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);
@@ -300,7 +316,7 @@ public class ChessGame {
             }
         }
 
-        kingSquare.setCurrentPiece(new Pawn(board, king.getCurrentSquare(), player.getColor()));
+        kingSquare.setCurrentPiece(new Pawn(board, king.getCurrentSquare(), player));
         kingSquare.getCurrentPiece().findAllMoves();
         for (int i = 0; i < kingSquare.getCurrentPiece().getPiecesAttacked().size(); i++) {
             ChessPiece pieceAttacked = kingSquare.getCurrentPiece().getPiecesAttacked().get(i);

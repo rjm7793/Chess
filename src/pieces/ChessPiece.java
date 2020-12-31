@@ -2,6 +2,7 @@ package pieces;
 
 import chess_game.ChessBoard;
 import chess_game.Color;
+import chess_game.Player;
 import chess_game.Square;
 
 import java.util.ArrayList;
@@ -42,6 +43,11 @@ public abstract class ChessPiece {
     protected Color color;
 
     /**
+     * The player that owns this piece
+     */
+    protected Player player;
+
+    /**
      * The coordinates of the Square this piece is on
      */
     protected int row;
@@ -52,12 +58,13 @@ public abstract class ChessPiece {
      * this piece's whereabouts and colors.
      * @param board the board this piece is on
      * @param square the square this piece is on
-     * @param color the color of this piece
+     * @param player the player that owns this piece
      */
-    public ChessPiece(ChessBoard board, Square square, Color color) {
+    public ChessPiece(ChessBoard board, Square square, Player player) {
         this.board = board;
         this.currentSquare = square;
-        this.color = color;
+        this.player = player;
+        color = player.getColor();
         validMoves = new ArrayList<>();
         allPiecesAttacked = new ArrayList<>();
         squares = board.getSquares();
@@ -79,11 +86,17 @@ public abstract class ChessPiece {
             } else {
                 if (color == Color.WHITE) {
                     if (squares[x][y].getCurrentPiece().getColor() == Color.BLACK) {
+                        if (squares[x][y].getCurrentPiece() instanceof King) {
+                            ((King) squares[x][y].getCurrentPiece()).setCheck(true);
+                        }
                         validMoves.add(squares[x][y]);
                         allPiecesAttacked.add(squares[x][y].getCurrentPiece());
                     }
                 } else if (color == Color.BLACK) {
                     if (squares[x][y].getCurrentPiece().getColor() == Color.WHITE) {
+                        if (squares[x][y].getCurrentPiece() instanceof King) {
+                            ((King) squares[x][y].getCurrentPiece()).setCheck(true);
+                        }
                         validMoves.add(squares[x][y]);
                         allPiecesAttacked.add(squares[x][y].getCurrentPiece());
                     }

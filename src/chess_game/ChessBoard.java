@@ -58,11 +58,11 @@ public class ChessBoard {
                     case 0:
                     case 7:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], Color.BLACK));
-                            player2.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], black));
+                            black.addPiece(squares[row][col].getCurrentPiece());
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], Color.WHITE));
-                            player1.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Rook(this, squares[row][col], white));
+                            white.addPiece(squares[row][col].getCurrentPiece());
                         }
                         break;
 
@@ -70,11 +70,11 @@ public class ChessBoard {
                     case 1:
                     case 6:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], Color.BLACK));
-                            player2.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], black));
+                            black.addPiece(squares[row][col].getCurrentPiece());
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], Color.WHITE));
-                            player1.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Knight(this, squares[row][col], white));
+                            white.addPiece(squares[row][col].getCurrentPiece());
                         }
                         break;
 
@@ -82,33 +82,33 @@ public class ChessBoard {
                     case 2:
                     case 5:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], Color.BLACK));
-                            player2.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], black));
+                            black.addPiece(squares[row][col].getCurrentPiece());
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], Color.WHITE));
-                            player1.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Bishop(this, squares[row][col], white));
+                            white.addPiece(squares[row][col].getCurrentPiece());
                         }
                         break;
 
                     // handles the placement of queens and their piece color
                     case 3:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], Color.BLACK));
-                            player2.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], black));
+                            black.addPiece(squares[row][col].getCurrentPiece());
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], Color.WHITE));
-                            player1.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new Queen(this, squares[row][col], white));
+                            white.addPiece(squares[row][col].getCurrentPiece());
                         }
                         break;
 
                     // handles the placement of the kings and their piece color
                     case 4:
                         if (row == 0) {
-                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], Color.BLACK));
-                            player2.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], black));
+                            black.addPiece(squares[row][col].getCurrentPiece());
                         } else if (row == 7) {
-                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], Color.WHITE));
-                            player1.addPiece(squares[row][col].getCurrentPiece());
+                            squares[row][col].setCurrentPiece(new King(this, squares[row][col], white));
+                            white.addPiece(squares[row][col].getCurrentPiece());
                         }
                         break;
                 }
@@ -116,10 +116,10 @@ public class ChessBoard {
         }
         // sets up pawns for both sides
         for (int col = 0; col < 8; col++) {
-            squares[1][col].setCurrentPiece(new Pawn(this, squares[1][col], Color.BLACK));
-            player2.addPiece(squares[1][col].getCurrentPiece());
-            squares[6][col].setCurrentPiece(new Pawn(this, squares[6][col], Color.WHITE));
-            player1.addPiece(squares[6][col].getCurrentPiece());
+            squares[1][col].setCurrentPiece(new Pawn(this, squares[1][col], black));
+            black.addPiece(squares[1][col].getCurrentPiece());
+            squares[6][col].setCurrentPiece(new Pawn(this, squares[6][col], white));
+            white.addPiece(squares[6][col].getCurrentPiece());
         }
     }
 
