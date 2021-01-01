@@ -336,14 +336,7 @@ public class ChessGame {
             }
         }
 
-        kingSquare.setCurrentPiece(king);
-        if (replaced) {
-            board.getSquares()[row][col].setCurrentPiece(replacedPiece);
-        } else {
-            board.getSquares()[row][col].setOccupiedFalse();
-        }
-        originalSquare.setCurrentPiece(selectedPiece);
-        selectedPiece.setCurrentSquare(originalSquare);
+        resetSimulation(row, col, king, originalSquare, replacedPiece, replaced, kingSquare);
         return true;
     }
 
@@ -370,6 +363,9 @@ public class ChessGame {
         }
         originalSquare.setCurrentPiece(selectedPiece);
         selectedPiece.setCurrentSquare(originalSquare);
+        if (selectedPiece instanceof King) {
+            selectedPiece.findAllMoves();
+        }
     }
 
     /**
