@@ -18,6 +18,11 @@ public class Pawn extends ChessPiece {
     private boolean firstMove;
 
     /**
+     * Signifies if this Pawn can be captured by an en passant move from another pawn.
+     */
+    private boolean enPassantable;
+
+    /**
      * Constructor for a Pawn
      * @param board the board this piece belongs to
      * @param square the square this piece is on
@@ -26,6 +31,7 @@ public class Pawn extends ChessPiece {
     public Pawn(ChessBoard board, Square square, Player player) {
         super(board, square, player);
         firstMove = true;
+        enPassantable = false;
     }
 
     /**
@@ -66,8 +72,27 @@ public class Pawn extends ChessPiece {
                         validMoves.add(squares[x][y]);
                     }
                 }
+
+                // Checks for en passant moves on opposing Pawns that have just moved 2 pieces forward.
+                else {
+                    if (squares[row][col + 1].isOccupied()) {
+                        if (squares[row][col + 1].getCurrentPiece() instanceof Pawn) {
+                            if (((Pawn) squares[row][col + 1].getCurrentPiece()).isEnPassantable()) {
+                                validMoves.add(squares[x][y]);
+                                allPiecesAttacked.add(squares[row][col - 1].getCurrentPiece());
+                            }
+                        }
+                    } else if (squares[row][col - 1].isOccupied()) {
+                        if (squares[row][col - 1].getCurrentPiece() instanceof Pawn) {
+                            if (((Pawn) squares[row][col - 1].getCurrentPiece()).isEnPassantable()) {
+                                validMoves.add(squares[x][y]);
+                                allPiecesAttacked.add(squares[row][col - 1].getCurrentPiece());
+                            }
+                        }
+                    }
+                }
             }
-            // verifies moves where the pawn takes a piece by moving on a diagonal
+            // verifies moves where the pawn takes a piece directly (not en passant) by moving on a diagonal
             else {
                 // Checks if the destination square is on a diagonal to this pawn.
                 if (y != col) {
@@ -108,6 +133,30 @@ public class Pawn extends ChessPiece {
     }
 
     /**
+     * Returns whether or not this pawn can be captured in an en passant move the next turn.
+     *
+     * @return true if can be captured by en passant, false if not.
+     */
+    public boolean isEnPassantable() {
+        return enPassantable;
+    }
+
+    /**
+     * Indicates whether or not this piece can be captured in an en passant move by an opponent's
+     * pawn the next turn.
+     *
+     * @param newRow the new row of the Pawn after it moves
+     * @param newCol the new column of the Pawn after it moves
+     */
+    public void setEnPassant(int newRow, int newCol) {
+        if (color == Color.BLACK) {
+            enPassantable = (newRow == row + 2 && newCol == col);
+        } else if (color == Color.WHITE) {
+            enPassantable = (newRow == row - 2 && newCol == col);
+        }
+    }
+
+    /**
      * Indicates that it is no longer this Pawn's first move.
      */
     public void setFirstMove() {
@@ -134,6 +183,14 @@ public class Pawn extends ChessPiece {
         }
     }
 
+    /**
+     * Sets the current Square of this piece to a given square and updates the row and column of this piece.
+     *
+     * Used to simulate a pawn move without promoting it if it reaches the other side of the board, in order
+     * to avoid duplication.
+     *
+     * @param square the Square to update this piece's current square to
+     */
     public void setSquareWithoutPromotion(Square square) {
         super.setCurrentSquare(square);
     }

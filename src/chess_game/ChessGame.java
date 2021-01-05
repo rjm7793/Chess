@@ -20,7 +20,11 @@ public class ChessGame {
         WHITE_SELECT_MOVE, // White selects where to move their selected piece.
 
         BLACK_SELECT_PIECE, // Black selects a piece to move.
-        BLACK_SELECT_MOVE // Black selects where to move their selected piece.
+        BLACK_SELECT_MOVE, // Black selects where to move their selected piece.
+
+        CHECKMATE_WHITE_WINS, // The game is in checkmate and the white pieces won
+        CHECKMATE_BLACK_WINS, // The game is in checkmate and the black pieces won
+        STALEMATE, // The game is in stalemate
     }
 
     /**
@@ -192,11 +196,12 @@ public class ChessGame {
      * @return true if a move if executed, false if another piece is selected instead.
      */
     public boolean verifySelection(int row, int col, Player player, GameState newGameState) {
+        resetEnPassant(player);
         if (board.getSquares()[row][col].isOccupied()) {
             if (board.getSquares()[row][col].getCurrentPiece().getColor() == player.getColor()) {
                 // If the selected square occupies the same color piece as the player, re-selects the piece
                 // to be moved and does not execute any move.
-                 observer.updateLabel(board.getSquares()[row][col].toString() + " selected");
+                 observer.updateLabel(board.getSquares()[row][col].toString() + " selected.");
                  selectedPiece = board.getSquares()[row][col].getCurrentPiece();
                  selectedPiece.findAllMoves();
                  return false;
@@ -221,6 +226,21 @@ public class ChessGame {
     }
 
     /**
+     * Indicates that all remaining pawns for a given player cannot be captured by en passant.
+     *
+     * @param player the Player whose pawns cannot be captured by en passant.
+     */
+    public void resetEnPassant(Player player) {
+        for (int i = 0; i < player.getPieces().size(); i++) {
+            if (player.getPieces().get(i) instanceof Pawn) {
+                int row = player.getPieces().get(i).getCurrentSquare().getRow();
+                int col = player.getPieces().get(i).getCurrentSquare().getCol();
+                ((Pawn) player.getPieces().get(i)).setEnPassant(row, col);
+            }
+        }
+    }
+
+    /**
      * Executes a given move if the player's King is not in check after the move is executed. Then,
      * calls for the GUI to update its Button images and game message to reflect the new board state. Finally, it
      * updates the game state to show that it is the next player's turn. Only updates the GUI and GameState
@@ -235,6 +255,29 @@ public class ChessGame {
     public boolean executeMove(int row, int col, Player player, GameState newGameState) {
         // Simulates the move to see if the current player's King is in check after the move takes place.
         if (isKingSafe(row, col, player)) {
+            if (selectedPiece instanceof Pawn) { // Indicates that it is no longer the Pawn's first move.
+                                                 // Then checks if the Pawn is able to be en passanted after this move.
+                ((Pawn) selectedPiece).setFirstMove();
+                ((Pawn) selectedPiece).setEnPassant(row, col);
+
+                if (col != selectedPiece.getCurrentSquare().getCol() && !board.getSquares()[row][col].isOccupied()) {
+                    int attackedPieceCol = 0;
+                    if (col == selectedPiece.getCurrentSquare().getCol() - 1) {
+                        attackedPieceCol = -1;
+                    } else if (col == selectedPiece.getCurrentSquare().getCol() + 1) {
+                        attackedPieceCol = 1;
+                    }
+                    Square attackedSquare = board.getSquares()[selectedPiece.getCurrentSquare().getRow()][
+                            selectedPiece.getCurrentSquare().getCol() + attackedPieceCol];
+                    if (player.getColor() == Color.WHITE) {
+                        player2.removePiece(attackedSquare.getCurrentPiece());
+                    } else if (player.getColor() == Color.BLACK) {
+                        this.player.removePiece(attackedSquare.getCurrentPiece());
+                    }
+                    attackedSquare.setOccupiedFalse();
+                    observer.updateButton(attackedSquare);
+                }
+            }
             Square originalSquare = selectedPiece.getCurrentSquare();
             originalSquare.setOccupiedFalse();
             board.getSquares()[row][col].setCurrentPiece(selectedPiece);
@@ -243,9 +286,6 @@ public class ChessGame {
             observer.updateButton(board.getSquares()[row][col]);
             observer.updateLabel(originalSquare.toString() + " -> " + board.getSquares()[row][col].toString() +
                     " selected.");
-            if (selectedPiece instanceof Pawn) { // Indicates that it is no longer the Pawn's first move.
-                ((Pawn) selectedPiece).setFirstMove();
-            }
             this.gameState = newGameState;
             return true;
         }
