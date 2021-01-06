@@ -75,18 +75,24 @@ public class Pawn extends ChessPiece {
 
                 // Checks for en passant moves on opposing Pawns that have just moved 2 pieces forward.
                 else {
-                    if (squares[row][col + 1].isOccupied()) {
-                        if (squares[row][col + 1].getCurrentPiece() instanceof Pawn) {
-                            if (((Pawn) squares[row][col + 1].getCurrentPiece()).isEnPassantable()) {
-                                validMoves.add(squares[x][y]);
-                                allPiecesAttacked.add(squares[row][col - 1].getCurrentPiece());
+                    if (col + 1 <= 7) {
+                        if (squares[row][col + 1].isOccupied()) {
+                            if (squares[row][col + 1].getCurrentPiece() instanceof Pawn) {
+                                if (((Pawn) squares[row][col + 1].getCurrentPiece()).isEnPassantable()) {
+                                    validMoves.add(squares[x][y]);
+                                    allPiecesAttacked.add(squares[row][col + 1].getCurrentPiece());
+                                }
                             }
                         }
-                    } else if (squares[row][col - 1].isOccupied()) {
-                        if (squares[row][col - 1].getCurrentPiece() instanceof Pawn) {
-                            if (((Pawn) squares[row][col - 1].getCurrentPiece()).isEnPassantable()) {
-                                validMoves.add(squares[x][y]);
-                                allPiecesAttacked.add(squares[row][col - 1].getCurrentPiece());
+                    }
+
+                    if (col - 1 >= 0) {
+                        if (squares[row][col - 1].isOccupied()) {
+                            if (squares[row][col - 1].getCurrentPiece() instanceof Pawn) {
+                                if (((Pawn) squares[row][col - 1].getCurrentPiece()).isEnPassantable()) {
+                                    validMoves.add(squares[x][y]);
+                                    allPiecesAttacked.add(squares[row][col - 1].getCurrentPiece());
+                                }
                             }
                         }
                     }
