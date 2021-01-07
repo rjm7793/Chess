@@ -141,9 +141,9 @@ public class ChessGame {
                 if (checkmate(player, player2)) {
                     observer.updateLabel("Checkmate! Black wins!");
                 }
+                player2.getKing().setCheck(false); // If the game is not ended, the black king is guaranteed to not be
+                                                   // in check at this point.
             }
-            player2.getKing().setCheck(false); // If the game is not ended, the black king is guaranteed to not be
-                                               // in check at this point.
         }
     }
 
@@ -260,6 +260,7 @@ public class ChessGame {
                 ((Pawn) selectedPiece).setFirstMove();
                 ((Pawn) selectedPiece).setEnPassant(row, col);
 
+                // Checks if the selected move is an en passant move. If so, updates the square of the captured piece.
                 if (col != selectedPiece.getCurrentSquare().getCol() && !board.getSquares()[row][col].isOccupied()) {
                     int attackedPieceCol = 0;
                     if (col == selectedPiece.getCurrentSquare().getCol() - 1) {
@@ -277,6 +278,53 @@ public class ChessGame {
                     attackedSquare.setOccupiedFalse();
                     observer.updateButton(attackedSquare);
                 }
+            }
+            if (selectedPiece instanceof Rook) {
+                int kingRow = player.getKing().getCurrentSquare().getRow();
+                int kingCol = player.getKing().getCurrentSquare().getCol();
+                if (((Rook) selectedPiece).getCastleable() && player.getKing().getCastleable()) {
+                    if (row == kingRow && col == kingCol +1 && !board.getSquares()[kingRow][kingCol + 1].isOccupied()) {
+                        ChessPiece rook = selectedPiece;
+                        selectedPiece = player.getKing();
+                        if (executeMove(kingRow, kingCol + 1, player, gameState)) {
+                            if (executeMove(kingRow, kingCol + 2, player, gameState)) {
+                                selectedPiece = rook;
+                                ((Rook) selectedPiece).setCastleable(false);
+                            } else {
+                                executeMove(kingRow, kingCol, player, gameState);
+                                observer.updateLabel(rook.getCurrentSquare().toString() + " selected.");
+                                player.getKing().setCastleable(true);
+                                selectedPiece = rook;
+                                return false;
+                            }
+                        } else {
+                            selectedPiece = rook;
+                            return false;
+                        }
+                    } else if (row == kingRow && col == kingCol - 1 &&
+                            !board.getSquares()[kingRow][kingCol - 1].isOccupied()) {
+                        ChessPiece rook = selectedPiece;
+                        selectedPiece = player.getKing();
+                        if (executeMove(kingRow, kingCol - 1, player, gameState)) {
+                            if (executeMove(kingRow, kingCol - 2, player, gameState)) {
+                                selectedPiece = rook;
+                                ((Rook) selectedPiece).setCastleable(false);
+                            } else {
+                                executeMove(kingRow, kingCol, player, gameState);
+                                observer.updateLabel(rook.getCurrentSquare().toString() + " selected.");
+                                player.getKing().setCastleable(true);
+                                selectedPiece = rook;
+                                return false;
+                            }
+                        } else {
+                            selectedPiece = rook;
+                            return false;
+                        }
+                    }
+                }
+            }
+            if (selectedPiece instanceof King) {
+                player.getKing().setCastleable(false);
             }
             Square originalSquare = selectedPiece.getCurrentSquare();
             originalSquare.setOccupiedFalse();

@@ -18,6 +18,8 @@ public class King extends ChessPiece {
      */
     private boolean check;
 
+    private boolean castleable;
+
     /**
      * Constructor for a King
      * @param board the board this piece belongs to
@@ -27,6 +29,7 @@ public class King extends ChessPiece {
     public King(ChessBoard board, Square square, Player player) {
         super(board, square, player);
         check = false;
+        castleable = true;
     }
 
     /**
@@ -46,8 +49,16 @@ public class King extends ChessPiece {
         verifyMove(row + 1, col - 1);
     }
 
+    public void setCastleable(boolean isCastleable) {
+        castleable = isCastleable;
+    }
+
     public void setCheck(boolean inCheck) {
         this.check = inCheck;
+    }
+
+    public boolean getCastleable() {
+        return castleable;
     }
 
     public boolean getCheck() {

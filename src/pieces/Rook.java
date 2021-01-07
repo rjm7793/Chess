@@ -11,6 +11,8 @@ import chess_game.Square;
  */
 public class Rook extends ChessPiece {
 
+    private boolean castleable;
+
     /**
      * Constructor for a Rook
      * @param board the board this piece belongs to
@@ -19,6 +21,7 @@ public class Rook extends ChessPiece {
      */
     public Rook(ChessBoard board, Square square, Player player) {
         super(board, square, player);
+        castleable = true;
     }
 
     /**
@@ -29,6 +32,14 @@ public class Rook extends ChessPiece {
         validMoves.clear();
         allPiecesAttacked.clear();
         verifyStraights();
+    }
+
+    public void setCastleable(boolean isCastleable) {
+        castleable = isCastleable;
+    }
+
+    public boolean getCastleable() {
+        return castleable;
     }
 
     /**
